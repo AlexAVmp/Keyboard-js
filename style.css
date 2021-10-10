@@ -2,3 +2,13 @@ body {
     display: flex;
     flex-direction: column-reverse;
 }
+
+.text-area {
+    width: 50%;
+    height: 100px;
+}
+
+.button-active {
+    background-color: yellow;
+    border-radius: 50% 50%;
+}
