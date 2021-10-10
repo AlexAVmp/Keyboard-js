@@ -47,7 +47,7 @@ const capsLock = document.querySelector('.CapsLock');
 
 textArea.addEventListener('keyup', (element) => {
     const { code } = element;
-    
+
     letters.forEach((key) => {
         if (code === 'ShiftLeft' || code === 'ShiftRight'){
             letters.forEach((key) => {
@@ -117,4 +117,86 @@ textArea.addEventListener('keydown', (element) => {
     }
 })
 
+const keyButton = document.querySelectorAll('button')
+
+keyboard.addEventListener('mousedown', (element) => {
+    const elementCode = element.target.textContent;
+
+    if (element.which === 1) {
+        if (elementCode === 'CapsLock') {
+            if (capsLock.classList.contains('button-active')) {
+                element.target.classList.remove('button-active');
+                for (let i = 0; i < keyButton.length; i++) {
+                    keyButton[i].innerHTML = letters[i].text[lang];
+                }
+            } else {
+                element.target.classList.add('button-active');
+                for (let i = 0; i < keyButton.length; i++) {
+                    keyButton[i].innerHTML = letters[i].shiftText[lang];
+                }
+            }
+        }
+        if (elementCode === 'Tab') {
+            element.preventDefault();
+            textArea.value += '\n';
+        }
+        if (elementCode === 'ENTER') {
+            textArea.value += '\t';
+        }
+        if (elementCode === 'Shift') {
+            element.target.classList.add('button-active');
+            for (let i = 0; i < keyButton.length; i++) {
+                keyButton[i].innerHTML = letters[i].shiftText[lang]
+            }
+        }
+        if (elementCode === '◄') {
+            element.target.classList.add('button-active'); 
+            if (textArea.selectionStart !== 0) {
+                textArea.selectionStart -= 1;
+                textArea.selectionEnd -= 1;
+            }
+        }
+        if (elementCode === '►') {
+            element.target.classList.add('button-active');
+            if (textArea.selectionStart !== textArea.value.length) {
+                textArea.selectionStart += 1;
+                textArea.selectionEnd += 1;
+            }
+        }
+        if (elementCode === '▲') {
+            element.target.classList.add('button-active'); 
+            if (textArea.selectionStart !== 0) {
+                textArea.selectionStart -= 81;
+                textArea.selectionEnd -= 81;
+            }
+        }
+        if (elementCode === '▼') {
+            element.target.classList.add('button-active');
+            if (textArea.selectionStart !== textArea.value.length) {
+                textArea.selectionStart += 81;
+                textArea.selectionEnd += 0;
+            }
+        }
+        if (elementCode === 'Backspace') {
+            elem.target.classList.add('button-active');
+             textArea.value = textArea.value.slice(0, -1);
+        } else {
+
+        }
+    }
+})
+
+keyboard.addEventListener('mouseup', (element) => {
+    const elementCode = element.target.outerText;
+    if (elementCode !== 'CapsLock') {
+      element.target.classList.remove('button-active');
+    }
+    if (elementCode === 'Shift') {
+      for (let i = 0; i < keyButton.length; i++) {
+        if (keyButton[i].textContent = letters[i].shiftText[lang]) {
+          keyButton[i].innerHTML = letters[i].text[lang];
+        }
+      }
+    }
+  })
 
