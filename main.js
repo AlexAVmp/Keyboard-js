@@ -1,12 +1,5 @@
 import letters from "./buttons.js";
 
-const languages = {
-    ru: "ru",
-    en: "en",
-}
-
-const lang = languages.ru;
-
 const main = document.createElement('main');
 document.body.appendChild(main);
 main.classList.add('main');
@@ -21,6 +14,16 @@ main.appendChild(keyboard);
 main.classList.add('keyboard');
 
 let line = document.createElement('div');
+
+const languages = {
+    ru: 'ru',
+    en: 'en',
+}
+
+if (localStorage.getItem('lang') === null) {
+    localStorage.setItem('lang', languages.ru);
+}
+let lang = localStorage.getItem('lang');
 
 letters.forEach((key) => {
     const button = document.createElement('button');
@@ -96,11 +99,9 @@ textArea.addEventListener('keydown', (element) => {
         element.preventDefault();
         textArea.value += '   ';
     }
-
     if (code === 'AltLeft' || code === 'AltRight') {
         element.preventDefault();
     }
-
     if (code === 'ShiftLeft' || code === 'ShiftRight') {
         if (code === 'ShiftLeft'){
             document.querySelector('.ShiftLeft').classList.add('button-active');
@@ -138,10 +139,12 @@ keyboard.addEventListener('mousedown', (element) => {
         }
         if (elementCode === 'Tab') {
             element.preventDefault();
-            textArea.value += '\n';
+            element.target.classList.add('button-active');
+            textArea.value += '\t';
         }
         if (elementCode === 'ENTER') {
-            textArea.value += '\t';
+            element.target.classList.add('button-active');
+            textArea.value += '\n';
         }
         if (elementCode === 'Shift') {
             element.target.classList.add('button-active');
@@ -177,11 +180,42 @@ keyboard.addEventListener('mousedown', (element) => {
                 textArea.selectionEnd += 0;
             }
         }
+        if (elementCode === 'Ctrl') {
+            element.target.classList.add('button-active');
+        }
+        if (elementCode === 'Alt') {
+            element.target.classList.add('button-active');
+        }
+        if (elementCode === 'En/Ru') {
+            element.target.classList.add('button-active');
+            if (lang === 'ru') {
+                lang = 'en';
+                for (let i = 0; i < keyButton.length; i += 1) {
+                    keyButton[i].innerHTML = letters[i].text[lang]
+                }
+            } else {
+                lang = 'ru';
+                for (let i = 0; i < keyButton.length; i += 1) {
+                    keyButton[i].innerHTML = letters[i].text[lang]
+                }
+            }
+        }
         if (elementCode === 'Backspace') {
-            elem.target.classList.add('button-active');
-             textArea.value = textArea.value.slice(0, -1);
+            element.target.classList.add('button-active');
+                textArea.value = textArea.value.slice(0, -1);
         } else {
-
+            if (elementCode !== 'CapsLock' && elementCode !== 'Shift' && elementCode !== 'Del' && elementCode !== 'ENTER' && elementCode !== 'Ctrl' && elementCode !== 'En/Ru' && elementCode !== 'Alt' && elementCode !== 'Tab'){
+                for (let i = 0; i < keyButton.length; i++){
+                    if (elementCode === letters[i].text[lang]) {
+                        textArea.value += letters[i].text[lang];
+                        element.target.classList.add('button-active');
+                    }
+                    if (elementCode === letters[i].shiftText[lang]) {
+                        textArea.value += letters[i].shiftText[lang];
+                        element.target.classList.add('button-active');
+                    }
+                }
+            }
         }
     }
 })
@@ -189,14 +223,25 @@ keyboard.addEventListener('mousedown', (element) => {
 keyboard.addEventListener('mouseup', (element) => {
     const elementCode = element.target.outerText;
     if (elementCode !== 'CapsLock') {
-      element.target.classList.remove('button-active');
+        element.target.classList.remove('button-active');
     }
     if (elementCode === 'Shift') {
-      for (let i = 0; i < keyButton.length; i++) {
-        if (keyButton[i].textContent = letters[i].shiftText[lang]) {
-          keyButton[i].innerHTML = letters[i].text[lang];
+        for (let i = 0; i < keyButton.length; i += 1) {
+            if (keyButton[i].textContent = letters[i].shiftText[lang]) {
+            keyButton[i].innerHTML = letters[i].text[lang];
+            }
         }
-      }
+    } 
+})
+
+keyboard.addEventListener('mouseout', (element) => {
+    const elementCode = element.target.outerText;
+    if (elementCode !== 'CapsLock' && elementCode !== 'Shift'){
+        element.target.classList.remove('button-active');
     }
-  })
+})
+
+
+
+
 
